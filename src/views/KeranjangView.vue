@@ -1,4 +1,3 @@
-// 26:59
 <template>
   <div class="keranjang">
     <NavbarComponents :updateKeranjang="keranjangs" />
@@ -157,13 +156,17 @@ export default {
         .catch((error) => console.log(error));
     },
     checkout() {
-      // console.log("Pesan : ", this.pesan);
       if (this.pesan.nama && this.pesan.noMeja) {
-        // console.log("cek");
         this.pesan.keranjangs = this.keranjangs;
         axios
           .post("http://localhost:3000/pesanans", this.pesan)
           .then(() => {
+            // Hapus Semua Keranjang
+            this.keranjangs.map(function (item) {
+              return axios
+                .delete("http://localhost:3000/keranjangs/" + item.id)
+                .catch((error) => console.log(error));
+            });
             this.$router.push({ path: "/pesanan-sukses" });
             this.$toast.success("Sukses Dipesan", {
               type: "success",
@@ -174,7 +177,7 @@ export default {
           })
           .catch((err) => console.log(err));
       } else {
-        this.$toast.error("Nama Dan Nomor Meja Harus diisi ! ", {
+        this.$toast.error("Nama dan Nomor Meja Harus diisi", {
           type: "error",
           position: "top-right",
           duration: 3000,
@@ -182,6 +185,37 @@ export default {
         });
       }
     },
+    // console.log("Pesan : ", this.pesan);
+    //   if (this.pesan.nama && this.pesan.noMeja) {
+    //     // console.log("cek");
+    //     this.pesan.keranjangs = this.keranjangs;
+    //     axios
+    //       .post("http://localhost:3000/pesanans", this.pesan)
+    //       .then(() => {
+    //         // Hapus Semua keranjang
+    //         this.keranjangs.map(function name(item) {
+    //           return axios
+    //             .delete("http://localhost:3000/keranjangs/" + item.id)
+    //             .catch((error) => console.log(error));
+    //         });
+    //         this.$router.push({ path: "/pesanan-sukses" });
+    //         this.$toast.success("Sukses Dipesan", {
+    //           type: "success",
+    //           position: "top-right",
+    //           duration: 3000,
+    //           dismissible: true,
+    //         });
+    //       })
+    //       .catch((err) => console.log(err));
+    //   } else {
+    //     this.$toast.error("Nama Dan Nomor Meja Harus diisi ! ", {
+    //       type: "error",
+    //       position: "top-right",
+    //       duration: 3000,
+    //       dismissible: true,
+    //     });
+    //   }
+    // },
   },
   mounted() {
     axios
